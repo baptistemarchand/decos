@@ -2,6 +2,17 @@ import haversine from "npm:haversine";
 import collection from "./takeoffs-clean.json" with { type: "json" };
 
 Deno.serve((req) => {
+  if (req.method === "OPTIONS") {
+    return new Response(null, {
+      status: 204,
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    });
+  }
+
   const url = new URL(req.url);
   const [lat, lon, km] = [
     parseFloat(url.searchParams.get("lat")!),
@@ -9,16 +20,32 @@ Deno.serve((req) => {
     parseFloat(url.searchParams.get("km") ?? "20"),
   ];
 
+  console.log(`New request`, { lat, lon, km });
+
   const here = { geometry: { coordinates: [lon, lat] } };
 
-  const points = collection.features.filter((feature) =>
-    haversine(here, feature, { threshold: km, unit: "km", format: "geojson" })
-  );
-
-  return new Response(JSON.stringify(points), {
-    status: 200,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-    },
+  const newFeatures = collection.features.filter((feature) => {
+    if (!feature.properties.flights) {
+      return false;
+    }
+    return haversine(here, feature, {
+      threshold: km,
+      unit: "km",
+      format: "geojson",
+    });
   });
+
+  return new Response(
+    JSON.stringify({
+      ...collection,
+      features: newFeatures,
+    }),
+    {
+      status: 200,
+      headers: {
+        "content-type": "application/json; charset=utf-8",
+        "Access-Control-Allow-Origin": "*",
+      },
+    },
+  );
 });
