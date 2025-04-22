@@ -67,12 +67,12 @@
             window.location.search,
           ).get("km");
 
-          const collection = await (await fetch(
-            `http://localhost:8000/?lon=${lon}&lat=${lat}&km=${
+          const url =
+            `https://api.vol-rando.com/?lon=${lon}&lat=${lat}&km=${
               km ?? 30
-            }`,
-          )).json();
-          console.log(collection);
+            }`;
+
+          const collection = await (await fetch(url)).json();
           new maplibregl.Marker({ color: "green" })
             .setLngLat([lon, lat])
             .addTo(map);
