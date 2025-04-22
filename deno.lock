@@ -1,0 +1,11 @@
+{
+  "version": "4",
+  "specifiers": {
+    "npm:haversine@*": "1.1.1"
+  },
+  "npm": {
+    "haversine@1.1.1": {
+      "integrity": "sha512-KW4MS8+krLIeiw8bF5z532CptG0ZyGGFj0UbKMxx25lKnnJ1hMUbuzQl+PXQjNiDLnl1bOyz23U6hSK10r4guw=="
+    }
+  }
+}
