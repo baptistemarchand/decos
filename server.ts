@@ -16,6 +16,7 @@ Deno.serve((req) => {
   const url = new URL(req.url);
 
   if (!url.searchParams.has("lat") || !url.searchParams.has("lon")) {
+    console.log("lat or lon not provider: return 400");
     return new Response(null, { status: 400 });
   }
 
