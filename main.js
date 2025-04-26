@@ -10,14 +10,14 @@ const map = new maplibregl.Map({
 let marker;
 
 const updatePos = (options) => {
-  document.getElementById("recenter").textContent = "Loading...";
+  document.getElementById("recenter").textContent = "Locating...";
   navigator.geolocation.getCurrentPosition((position) => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
     map.setCenter([lon, lat]);
 
     marker?.remove();
-    marker = new maplibregl.Marker({ color: "yellow" })
+    marker = new maplibregl.Marker({ color: "green" })
       .setLngLat([lon, lat])
       .addTo(map);
     document.getElementById("recenter").textContent = "recenter";
@@ -34,7 +34,7 @@ document.getElementById("recenter").addEventListener(
 
 map.on("load", () => {
   updatePos({ maximumAge: Infinity });
-  updatePos();
+  // updatePos();
 
   map.addSource("my-points", {
     type: "geojson",
