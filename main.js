@@ -1061,14 +1061,14 @@ document.getElementById("recenter").addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition((position) => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
-    map.setCenter([lon, lat]);
+    map.flyTo({ center: [lon, lat] });
 
     marker.remove();
-    marker = new maplibregl.Marker({ color: "green" })
+    marker = new maplibregl.Marker({ color: "yellow" })
       .setLngLat([lon, lat])
       .addTo(map);
+    alert("done");
   });
-  alert("done");
 });
 
 map.on("load", () => {
