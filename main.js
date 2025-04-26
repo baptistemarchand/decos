@@ -1057,7 +1057,7 @@ const map = new maplibregl.Map({
 
 let marker;
 
-document.addEventListener("recenter", function (event) {
+document.getElementById("recenter").addEventListener("click", () => {
   navigator.geolocation.getCurrentPosition((position) => {
     const lat = position.coords.latitude;
     const lon = position.coords.longitude;
@@ -1068,6 +1068,7 @@ document.addEventListener("recenter", function (event) {
       .setLngLat([lon, lat])
       .addTo(map);
   });
+  alert("done");
 });
 
 map.on("load", () => {
