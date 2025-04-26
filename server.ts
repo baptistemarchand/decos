@@ -15,24 +15,31 @@ Deno.serve((req) => {
 
   const url = new URL(req.url);
 
-  if (!url.searchParams.has("lat") || !url.searchParams.has("lon")) {
-    console.log("lat or lon not provider: return 400");
+  if (
+    !url.searchParams.has("all") &&
+    (!url.searchParams.has("lat") || !url.searchParams.has("lon"))
+  ) {
+    console.log("all and (lat or lon) not provider: return 400");
     return new Response(null, { status: 400 });
   }
 
-  const [lat, lon, km] = [
+  const [lat, lon, km, all] = [
     parseFloat(url.searchParams.get("lat")!),
     parseFloat(url.searchParams.get("lon")!),
     parseFloat(url.searchParams.get("km") ?? "20"),
+    url.searchParams.get("all"),
   ];
 
-  console.log(`New request`, { lat, lon, km });
+  console.log(`New request`, { lat, lon, km, all });
 
   const here = { geometry: { coordinates: [lon, lat] } };
 
   const newFeatures = collection.features.filter((feature) => {
-    if (!feature.properties.flights) {
+    if (!feature.properties.url || !feature.properties.flights) {
       return false;
+    }
+    if (all) {
+      return true;
     }
     return haversine(here, feature, {
       threshold: km,
